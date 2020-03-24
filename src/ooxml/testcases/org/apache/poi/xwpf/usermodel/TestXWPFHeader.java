@@ -178,6 +178,29 @@ public final class TestXWPFHeader {
             assertEquals(1, footerF.getParagraphs().size());
         }
     }
+    
+    @Test
+    public void testGetPosOfParagraphAndTable() throws IOException {
+        XWPFDocument doc = new XWPFDocument();
+        XWPFHeaderFooterPolicy policy = doc.createHeaderFooterPolicy();
+        XWPFHeader header = policy.createHeader(XWPFHeaderFooterPolicy.DEFAULT);
+
+        XWPFParagraph p0 = header.createParagraph();
+        XWPFParagraph p1 = header.createParagraph();
+        XWPFTable t0 = header.createTable(1, 1);
+        XWPFParagraph p2 = header.createParagraph();
+        XWPFTable t1 = header.createTable(1, 1);
+        XWPFTable t2 = header.createTable(1, 1);
+        
+        assertEquals(0, header.getPosOfParagraph(p0));
+        assertEquals(1, header.getPosOfParagraph(p1));
+        assertEquals(2, header.getPosOfTable(t0));
+        assertEquals(3, header.getPosOfParagraph(p2));
+        assertEquals(4, header.getPosOfTable(t1));
+        assertEquals(5, header.getPosOfTable(t2));
+
+        doc.close();
+    }
 
     @Test
     public void testSetWatermark() throws IOException {

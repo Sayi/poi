@@ -26,8 +26,10 @@ import org.junit.Test;
 
 import org.apache.poi.xwpf.XWPFTestDataSamples;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
+import org.apache.xmlbeans.XmlCursor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
+import java.io.IOException;
 import java.util.List;
 
 public class TestXWPFTableCell {
@@ -147,6 +149,34 @@ public class TestXWPFTableCell {
         assertEquals(TableWidthType.PCT, cell.getWidthType());
         assertEquals(50.0, cell.getWidthDecimal(), 0.0);
         assertEquals(2500, cell.getWidth());
+        doc.close();
+    }
+
+    @Test
+    public void testGetPosOfParagraphAndTable() throws IOException {
+        XWPFDocument doc = new XWPFDocument();
+        XWPFTable table = doc.createTable();
+        XWPFTableCell cell = table.createRow().createCell();
+
+        XWPFParagraph p0 = cell.addParagraph();
+        XWPFParagraph p1 = cell.addParagraph();
+        XmlCursor cursor = p1.getCTP().newCursor();
+        XWPFTable t0 = cell.insertNewTbl(cursor);
+        cursor.dispose();
+        XWPFParagraph p2 = cell.addParagraph();
+        cursor = p2.getCTP().newCursor();
+        XWPFTable t1 = cell.insertNewTbl(cursor);
+        XWPFTable t2 = cell.insertNewTbl(cursor);
+        cursor.dispose();
+        cell.addParagraph();
+        
+        assertEquals(0, cell.getPosOfParagraph(p0));
+        assertEquals(1, cell.getPosOfParagraph(p1));
+        assertEquals(2, cell.getPosOfTable(t0));
+        assertEquals(3, cell.getPosOfParagraph(p2));
+        assertEquals(4, cell.getPosOfTable(t1));
+        assertEquals(5, cell.getPosOfTable(t2));
+
         doc.close();
     }
 }

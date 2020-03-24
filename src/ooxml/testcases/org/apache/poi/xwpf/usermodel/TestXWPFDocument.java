@@ -152,6 +152,27 @@ public final class TestXWPFDocument {
     }
 
     @Test
+    public void testGetPosOfParagraphAndTable() throws IOException {
+        XWPFDocument doc = new XWPFDocument();
+
+        XWPFParagraph p0 = doc.createParagraph();
+        XWPFParagraph p1 = doc.createParagraph();
+        XWPFTable t0 = doc.createTable();
+        XWPFParagraph p2 = doc.createParagraph();
+        XWPFTable t1 = doc.createTable();
+        XWPFTable t2 = doc.createTable();
+        
+        assertEquals(0, doc.getPosOfParagraph(p0));
+        assertEquals(1, doc.getPosOfParagraph(p1));
+        assertEquals(2, doc.getPosOfTable(t0));
+        assertEquals(3, doc.getPosOfParagraph(p2));
+        assertEquals(4, doc.getPosOfTable(t1));
+        assertEquals(5, doc.getPosOfTable(t2));
+
+        doc.close();
+    }
+
+    @Test
     public void testAddPicture() throws IOException, InvalidFormatException {
         XWPFDocument doc = XWPFTestDataSamples.openSampleDocument("sample.docx");
         byte[] jpeg = XWPFTestDataSamples.getImage("nature1.jpg");

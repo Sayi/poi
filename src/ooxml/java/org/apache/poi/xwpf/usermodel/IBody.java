@@ -133,4 +133,47 @@ public interface IBody {
      * Return XWPFDocument
      */
     public XWPFDocument getXWPFDocument();
+
+    /**
+     * Get the position of the paragraph, within the list
+     * of all the body elements.
+     *
+     * @param p The paragraph to find
+     * @return The location, or -1 if the paragraph couldn't be found
+     */
+    default int getPosOfParagraph(XWPFParagraph p) {
+        return getPosOfBodyElement(p);
+    }
+
+    /**
+     * Get the position of the table, within the list of
+     * all the body elements.
+     *
+     * @param t The table to find
+     * @return The location, or -1 if the table couldn't be found
+     */
+    default int getPosOfTable(XWPFTable t) {
+        return getPosOfBodyElement(t);
+    }
+
+    /**
+     * Get the position of the bodyElement
+     *
+     * @param needle the bodyElement to find
+     * @return
+     */
+    default int getPosOfBodyElement(IBodyElement needle) {
+        List<IBodyElement> bodyElements = getBodyElements();
+        IBodyElement current;
+        for (int i = 0; i < bodyElements .size(); i++) {
+            current = bodyElements.get(i);
+            if (current.getElementType() == needle.getElementType()) {
+                if (current.equals(needle)) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+    
 }
